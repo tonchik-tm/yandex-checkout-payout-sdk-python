@@ -24,7 +24,7 @@ wheels/
 *.egg-info/
 .installed.cfg
 *.egg
-.nox
+.nox/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -103,4 +103,4 @@ ENV/
 .mypy_cache/
 
 # IDE settings
-.idea
+.idea/
