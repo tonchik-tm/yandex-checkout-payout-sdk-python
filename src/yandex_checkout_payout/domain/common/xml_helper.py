@@ -1,6 +1,5 @@
 import re
 
-import var_dump
 from lxml import etree
 
 
@@ -108,6 +107,8 @@ class Object2XML:
                 # name-wise, only really works for one level, however
                 # in practice, this is probably ok
                 child_str += self._dict_to_xml(child_obj, obj_name[:-1])
+            elif child_obj is None:
+                pass
             else:
                 for string in child_obj:
                     child_str += string
