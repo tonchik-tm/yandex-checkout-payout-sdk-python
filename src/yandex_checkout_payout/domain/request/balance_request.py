@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
-from yandex_checkout_payout.domain.common.request_object import RequestObject
+from yandex_checkout_payout.domain.request.request_object import RequestObject
 
 
 class BalanceRequest(RequestObject):
 
     __agent_id = None
-
     __client_order_id = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.request_name = 'balanceRequest'
 
     @property
     def agent_id(self):
@@ -40,4 +43,4 @@ class BalanceRequest(RequestObject):
             "agentId": self.agent_id,
             "clientOrderId": self.client_order_id
         })
-        return {"balanceRequest": _map}
+        return {self.request_name: _map}

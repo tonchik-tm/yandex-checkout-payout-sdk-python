@@ -1,15 +1,12 @@
 # -*- coding: utf-8 -*-
-import datetime
 
-from yandex_checkout_payout.domain.common.response_object import ResponseObject
+from yandex_checkout_payout.domain.response.response_object import ResponseObject
 
 
 class BalanceResponse(ResponseObject):
 
     __agent_id = None
-
     __client_order_id = None
-
     __balance = None
 
     @property

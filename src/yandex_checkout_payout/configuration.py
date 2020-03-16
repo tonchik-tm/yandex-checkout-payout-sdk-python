@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 import logging
 import os
-from os.path import abspath
 
 from yandex_checkout_payout.domain.common.keychain import KeyChain
-from yandex_checkout_payout.domain.common.user_agent import Version
 
 
 class ConfigurationError(Exception):
@@ -17,6 +15,7 @@ class Configuration(object):
     """
     api_url = "https://calypso.yamoney.ru:9094/"
     # api_url = "https://bo-demo02.yamoney.ru:9094/"
+    synonym_card_url = "https://paymentcard.yamoney.ru/"
     agent_id = None
     keychain = None
     logger = None
@@ -68,8 +67,11 @@ class Configuration(object):
         )
 
     @staticmethod
-    def api_endpoint():
-        return Configuration.api_url
+    def api_endpoint(is_ssl=True):
+        if is_ssl:
+            return Configuration.api_url
+        else:
+            return Configuration.synonym_card_url
 
     def has_api_credentials(self):
         return self.agent_id is not None and self.keychain is not None

@@ -17,7 +17,7 @@ setup(
     ],
     description="",
     entry_points={"console_scripts": ["yandex_checkout_payout=yandex_checkout_payout.cli:main", ], },
-    install_requires=['nox', 'distro'],
+    install_requires=['nox', 'distro', 'urllib3', 'requests', 'lxml'],
     license="MIT license",
     long_description=readme,
     long_description_content_type="text/markdown",
@@ -26,7 +26,11 @@ setup(
     keywords="yandex, checkout, payout, sdk, python",
     name="yandex_checkout_payout",
     package_dir={"": "src"},
-    packages=find_packages(include=["src/yandex_checkout_payout", "src/yandex_checkout_payout.*"]),
+    packages=find_packages(include=[
+        "src/yandex_checkout_payout", "src/yandex_checkout_payout.*", "src/yandex_checkout_payout.domain.common.*",
+        "src/yandex_checkout_payout.domain.exceptions.*", "src/yandex_checkout_payout.domain.models.*",
+        "src/yandex_checkout_payout.domain.request.*", "src/yandex_checkout_payout.domain.response.*"
+    ]),
     setup_requires=[],
     url="https://github.com/yandex-money/yandex-checkout-payout-sdk-python",
     version="0.1.0",
