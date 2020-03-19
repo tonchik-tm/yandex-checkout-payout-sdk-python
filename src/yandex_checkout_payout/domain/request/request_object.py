@@ -14,7 +14,7 @@ class RequestObject(BaseObject):
     __request_dt = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(RequestObject, self).__init__(*args, **kwargs)
         self.request_dt = datetime.datetime.now()
         self.request_name = 'baseRequest'
 

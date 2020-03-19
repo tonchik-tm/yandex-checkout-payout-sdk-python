@@ -37,11 +37,11 @@ class ErrorDepositionNotificationResponse(BaseObject):
             try:
                 self.__processed_dt = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
             except Exception:
-                raise TypeError('Invalid request_dt value type')
+                raise TypeError('Invalid processed_dt value type')
         elif isinstance(value, datetime.datetime):
             self.__processed_dt = value
         else:
-            raise TypeError('Invalid request_dt value type')
+            raise TypeError('Invalid processed_dt value type')
 
     @property
     def client_order_id(self):
