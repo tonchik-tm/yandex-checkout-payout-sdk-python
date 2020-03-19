@@ -95,7 +95,7 @@ class BankCardRecipient(Recipient):
         if cast_value and len(cast_value) <= 100:
             self.__pdr_address = cast_value
         else:
-            raise ValueError('Invalid bank_account address value')
+            raise ValueError('Invalid pdr_address value')
 
     @property
     def pdr_city(self):

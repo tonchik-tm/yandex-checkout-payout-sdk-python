@@ -18,8 +18,8 @@ class ErrorDepositionNotification:
     def input(cls, response):
         instance = cls()
         data = instance.client.prepare_response(response)
-        if 'ErrorDepositionNotificationRequest' in data:
-            return ErrorDepositionNotificationRequest(data['ErrorDepositionNotificationRequest'])
+        if 'errorDepositionNotificationRequest' in data:
+            return ErrorDepositionNotificationRequest(data['errorDepositionNotificationRequest'])
         else:
             raise ApiError('')
 

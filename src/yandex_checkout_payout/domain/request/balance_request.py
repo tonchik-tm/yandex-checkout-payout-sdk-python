@@ -8,7 +8,7 @@ class BalanceRequest(RequestObject):
     __client_order_id = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(BalanceRequest, self).__init__(*args, **kwargs)
         self.request_name = 'balanceRequest'
 
     @property
@@ -38,7 +38,7 @@ class BalanceRequest(RequestObject):
         raise ValueError(message)
 
     def map(self):
-        _map = super().map()
+        _map = super(BalanceRequest, self).map()
         _map.update({
             "agentId": self.agent_id,
             "clientOrderId": self.client_order_id

@@ -23,7 +23,7 @@ class MakeDepositionRequest(DepositionRequest):
         elif isinstance(value, dict):
             self.__payment_params = RecipientFactory.factory(value)
         else:
-            raise TypeError('Invalid pdr_doc_issue_date value type')
+            raise TypeError('Invalid payment_params value type')
 
     def map(self):
         _map = super().map()

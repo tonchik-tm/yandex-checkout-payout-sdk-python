@@ -16,7 +16,7 @@ class ErrorDepositionNotificationRequest(BaseObject):
     __error = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ErrorDepositionNotificationRequest, self).__init__(*args, **kwargs)
 
     @staticmethod
     def context():
@@ -40,11 +40,11 @@ class ErrorDepositionNotificationRequest(BaseObject):
             try:
                 self.__processed_dt = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
             except Exception:
-                raise TypeError('Invalid request_dt value type')
+                raise TypeError('Invalid processed_dt value type')
         elif isinstance(value, datetime.datetime):
             self.__processed_dt = value
         else:
-            raise TypeError('Invalid request_dt value type')
+            raise TypeError('Invalid processed_dt value type')
 
     @property
     def client_order_id(self):
@@ -80,7 +80,7 @@ class ErrorDepositionNotificationRequest(BaseObject):
 
     def validate(self):
         if self.client_order_id is None:
-            self.__set_validation_error('Balance client_order_id not specified')
+            self.__set_validation_error('ErrorDepositionNotificationRequest client_order_id not specified')
 
     def __set_validation_error(self, message):
         raise ValueError(message)
