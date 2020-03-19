@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 
-import os
 import unittest
 import uuid
 from os.path import abspath
@@ -14,13 +13,14 @@ from lxml import etree
 
 from yandex_checkout_payout import yandex_checkout_payout
 from yandex_checkout_payout.configuration import Configuration
+from yandex_checkout_payout.domain.common.currency import Currency
 from yandex_checkout_payout.domain.common.generator_csr import GeneratorCsr
 from yandex_checkout_payout.domain.common.keychain import KeyChain
 from yandex_checkout_payout.domain.common.openssl_helper import OpenSSLHelper
-from yandex_checkout_payout.domain.common.xml_helper import XML2Object, Object2XML, XMLHelper
+from yandex_checkout_payout.domain.common.xml_helper import XMLHelper
 from yandex_checkout_payout.domain.models.organization import Organization
 from yandex_checkout_payout.domain.request.balance_request import BalanceRequest
-from yandex_checkout_payout.domain.request.balance_response import BalanceResponse
+from yandex_checkout_payout.domain.response.balance_response import BalanceResponse
 from yandex_checkout_payout.yandex_checkout_payout import YandexCheckoutPayout
 
 
@@ -200,5 +200,34 @@ class TestYandexCheckoutPayout(unittest.TestCase):
 
         xml_string = XMLHelper.object_to_xml(python_object)
 
+        var_dump.var_dump(python_object)
+        var_dump.var_dump(xml_string)
+
+    def test_hard_object2xml(self):
+        # client_order_id = uuid.uuid4()
+        # request = BalanceRequest({"agent_id": 123456, "client_order_id": client_order_id})
+        # python_object = request.map()
+        python_object = {"makeDepositionRequest": {
+            "agentId": "123",
+            "clientOrderId": "12345",
+            "requestDT": "2011-07-01T20:38:00.000+03:00",
+            "dstAccount": "41001614575714",
+            "amount": 10.00,
+            "currency": Currency.RUB,
+            "contract": "Зачисление на кошелек",
+            "paymentParams": {
+                "skr_destinationCardSynonim": ["oALesdd_h_YT6pzpJ10Kn5aB.SC.000.201906"],
+                "pof_offerAccepted": ["1"],
+                "smsPhoneNumber": ["79818932328"],
+                "pdr_firstName": ["Эдуард"],
+                "pdr_lastName": ["Запеканкин"],
+                "pdr_docNumber": ["1013123456"],
+                "pdr_docIssueDate": ["10.10.2013"],
+                "pdr_country": ["643"],
+                "pdr_birthDate": ["31.10.1973"]
+            }
+        }}
+
+        xml_string = XMLHelper.object_to_xml(python_object)
         var_dump.var_dump(python_object)
         var_dump.var_dump(xml_string)
