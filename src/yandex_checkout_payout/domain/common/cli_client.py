@@ -1,10 +1,8 @@
+# -*- coding: utf-8 -*-
 import os
 from getpass import getpass
 from os.path import abspath
 
-from var_dump import var_dump
-
-from yandex_checkout_payout.domain.common.client import ApiClient
 from yandex_checkout_payout.domain.common.generator_csr import GeneratorCsr
 from yandex_checkout_payout.domain.models.organization import Organization
 
@@ -21,41 +19,12 @@ class CliClient:
         'email': {'name': 'Email Address', 'hint': None, 'req': True, 'default': None, },
     }
 
-    def test(self, args):
-        data = {
-            'FILE_KEY': {
-                'path': 'C:\ProgramData\OSPanel\domains\cmssdk.local\yandex-checkout-payout-sdk-python\\tests\\files\output3/client_key.pem',
-                'exist': True
-            },
-            'FILE_CRT': {
-                'path': 'C:\ProgramData\OSPanel\domains\cmssdk.local\yandex-checkout-payout-sdk-python\\tests\\files\output3/client_cert.crt',
-                'exist': True
-            },
-            'FILE_CSR': {
-                'path': 'C:\ProgramData\OSPanel\domains\cmssdk.local\yandex-checkout-payout-sdk-python\\tests\\files\output3/client_req.csr',
-                'exist': True
-            },
-            'FILE_SIG': {
-                'path': 'C:\ProgramData\OSPanel\domains\cmssdk.local\yandex-checkout-payout-sdk-python\\tests\\files\output3/signature.txt',
-                'exist': False
-            }
-        }
-        for ftype, fdata in data.items():
-            print("{}: {}".format(ftype, C.c(C.CGREEN2 if fdata['exist'] else C.CRED2, fdata['path'])))
-
-    def generate(self, args):
+    def generate(self):
         org = self.fill_org()
         output = self.fill_output()
         password = self.fill_password()
         self.print_data(org, output, password)
         self.run_generator(password, org, output)
-
-    def balance(self, args):
-        # keychain = KeyChain(abspath('../files/250000.cer'), abspath('../files/privateKey.pem'), '12345')
-        # Configuration.configure(250000, keychain)
-        # client_order_id = str(uuid.uuid4())
-        # response = YandexCheckoutPayout.get_balance(client_order_id)
-        pass
 
     def print_data(self, org, output, password):
         ret = C.c(C.CYELLOW2, "\nYour data:\n")

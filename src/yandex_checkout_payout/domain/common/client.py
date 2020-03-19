@@ -8,17 +8,14 @@ try:
 except ImportError:
     from urllib.parse import urlencode
 
-import urllib3
 import requests
+import urllib3
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 from urllib3.util.ssl_ import create_urllib3_context
-
 from yandex_checkout_payout.configuration import Configuration
-from yandex_checkout_payout.domain.common.xml_helper import XMLHelper
 from yandex_checkout_payout.domain.common.openssl_helper import OpenSSLHelper
-from yandex_checkout_payout.domain.request.request_object import RequestObject
-from yandex_checkout_payout.domain.request.synonym_card_request import SynonymCardRequest
+from yandex_checkout_payout.domain.common.xml_helper import XMLHelper
 from yandex_checkout_payout.domain.exceptions.api_error import ApiError
 from yandex_checkout_payout.domain.exceptions.bad_request_error import BadRequestError
 from yandex_checkout_payout.domain.exceptions.forbidden_error import ForbiddenError
@@ -26,6 +23,8 @@ from yandex_checkout_payout.domain.exceptions.not_found_error import NotFoundErr
 from yandex_checkout_payout.domain.exceptions.response_processing_error import ResponseProcessingError
 from yandex_checkout_payout.domain.exceptions.too_many_request_error import TooManyRequestsError
 from yandex_checkout_payout.domain.exceptions.unauthorized_error import UnauthorizedError
+from yandex_checkout_payout.domain.request.request_object import RequestObject
+from yandex_checkout_payout.domain.request.synonym_card_request import SynonymCardRequest
 
 
 class ApiClient:
