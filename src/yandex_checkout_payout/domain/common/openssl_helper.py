@@ -8,7 +8,7 @@ from OpenSSL import crypto
 from yandex_checkout_payout.domain.exceptions.open_ssl_error import OpenSSLError
 
 
-class OpenSSLHelper(object):
+class OpenSSLHelper:
     """
     A helper for work with SSL.
     """

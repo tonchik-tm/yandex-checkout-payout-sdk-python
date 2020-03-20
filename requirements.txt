@@ -1,5 +1,4 @@
 nox
-distro
 urllib3
 requests
 lxml
