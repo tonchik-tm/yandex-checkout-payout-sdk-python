@@ -19,7 +19,7 @@ from yandex_checkout_payout.yandex_checkout_payout import YandexCheckoutPayout
 class TestPackage(unittest.TestCase):
 
     def setUp(self):  # Set the keychain for all tests
-        keychain = KeyChain(abspath('../files/250000.cer'), abspath('../files/privateKey.pem'), '12345')
+        keychain = KeyChain(abspath('files/250000.cer'), abspath('files/privateKey.pem'), '12345')
         Configuration.configure(250000, keychain)
 
     def test_get_balance(self):

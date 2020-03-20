@@ -1,4 +1,6 @@
 # -*- coding: utf-8 -*-
+from yandex_checkout_payout.domain.exceptions.open_ssl_error import OpenSSLError
+
 try:
     from StringIO import StringIO as BytesIO
 except ImportError:
@@ -14,11 +16,11 @@ from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 from urllib3.util.ssl_ import create_urllib3_context
 
-from yandex_checkout_payout.domain.request.synonym_card_request import SynonymCardRequest
 from yandex_checkout_payout.configuration import Configuration
 from yandex_checkout_payout.domain.common.openssl_helper import OpenSSLHelper
-from yandex_checkout_payout.domain.request.request_object import RequestObject
 from yandex_checkout_payout.domain.common.xml_helper import XMLHelper
+from yandex_checkout_payout.domain.request.request_object import RequestObject
+from yandex_checkout_payout.domain.request.synonym_card_request import SynonymCardRequest
 from yandex_checkout_payout.domain.exceptions.api_error import ApiError
 from yandex_checkout_payout.domain.exceptions.bad_request_error import BadRequestError
 from yandex_checkout_payout.domain.exceptions.forbidden_error import ForbiddenError
@@ -63,7 +65,7 @@ class ApiClient:
             xml = OpenSSLHelper.decrypt_pkcs7(response.decode("utf-8"), self.configuration.yandex_cert)
             xml = xml.replace(b'\r', b'')
             return XMLHelper.xml_to_object(xml.decode("utf-8"))
-        except Exception:
+        except OpenSSLError:
             return None
 
     def execute(self, body, method, path, query_params, request_headers, is_ssl=True):

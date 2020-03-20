@@ -79,7 +79,7 @@ class BankCardRecipient(Recipient):
             try:
                 self.__pdr_doc_issue_date = datetime.datetime.strptime(value, '%Y-%m-%d').date()
             except Exception:
-                raise TypeError('Invalid pdr_doc_issue_date value type')
+                raise ValueError('Invalid pdr_doc_issue_date value type')
         elif isinstance(value, datetime.date):
             self.__pdr_doc_issue_date = value
         else:
@@ -111,7 +111,7 @@ class BankCardRecipient(Recipient):
 
     @pdr_country.setter
     def pdr_country(self, value):
-        self.__pdr_country = str(value)
+        self.__pdr_country = int(value)
 
     @property
     def pdr_postcode(self):
@@ -119,7 +119,7 @@ class BankCardRecipient(Recipient):
 
     @pdr_postcode.setter
     def pdr_postcode(self, value):
-        self.__pdr_postcode = str(value)
+        self.__pdr_postcode = int(value)
 
     @property
     def pdr_birth_date(self):
@@ -131,7 +131,7 @@ class BankCardRecipient(Recipient):
             try:
                 self.__pdr_birth_date = datetime.datetime.strptime(value, '%Y-%m-%d').date()
             except Exception:
-                raise TypeError('Invalid pdr_doc_issue_date value type')
+                raise ValueError('Invalid pdr_doc_issue_date value type')
         elif isinstance(value, datetime.date):
             self.__pdr_birth_date = value
         else:
@@ -143,14 +143,33 @@ class BankCardRecipient(Recipient):
 
     @sms_phone_number.setter
     def sms_phone_number(self, value):
-        cast_value = str(value)
+        cast_value = re.sub(r'[^\d]', '', str(value))
         if re.match('^[0-9]{4,15}$', cast_value):
             self.__sms_phone_number = cast_value
         else:
             raise ValueError('Invalid phone value type')
 
+    def validate(self):
+        super(BankCardRecipient, self).validate()
+        if not self.skr_destination_card_synonym:
+            self.set_validation_error('BankAccountRecipient skr_destination_card_synonym not specified')
+        if not self.pdr_first_name:
+            self.set_validation_error('BankAccountRecipient pdr_first_name not specified')
+        if not self.pdr_last_name:
+            self.set_validation_error('BankAccountRecipient pdr_last_name not specified')
+        if not self.pdr_doc_number:
+            self.set_validation_error('BankAccountRecipient pdr_doc_number not specified')
+        if not self.pdr_doc_issue_date:
+            self.set_validation_error('BankAccountRecipient pdr_doc_issue_date not specified')
+        if not self.pdr_country:
+            self.set_validation_error('BankAccountRecipient pdr_country not specified')
+        if not self.pdr_birth_date:
+            self.set_validation_error('BankAccountRecipient pdr_birth_date not specified')
+        if not self.sms_phone_number:
+            self.set_validation_error('BankAccountRecipient sms_phone_number not specified')
+
     def map(self):
-        _map = super().map()
+        _map = super(BankCardRecipient, self).map()
         _map.update({
             "skr_destinationCardSynonim": [self.skr_destination_card_synonym],
             "smsPhoneNumber": [self.sms_phone_number],
@@ -159,8 +178,8 @@ class BankCardRecipient(Recipient):
             "pdr_lastName": [self.pdr_last_name],
             "pdr_docNumber": [self.pdr_doc_number],
             "pdr_docIssueDate": [self.pdr_doc_issue_date.strftime('%d.%m.%Y')],
-            "pdr_postcode": [self.pdr_postcode],
-            "pdr_country": [self.pdr_country],
+            "pdr_postcode": [str(self.pdr_postcode)],
+            "pdr_country": [str(self.pdr_country)],
             "pdr_city": [self.pdr_city],
             "pdr_address": [self.pdr_address],
             "pdr_birthDate": [self.pdr_birth_date.strftime('%d.%m.%Y')],

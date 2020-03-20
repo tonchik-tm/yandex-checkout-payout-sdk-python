@@ -12,7 +12,17 @@ class Recipient(BaseObject):
 
     @pof_offer_accepted.setter
     def pof_offer_accepted(self, value):
-        self.__pof_offer_accepted = bool(value)
+        if isinstance(value, bool):
+            self.__pof_offer_accepted = value
+        else:
+            raise ValueError('Invalid pof_offer_accepted value')
+
+    def validate(self):
+        if not self.pof_offer_accepted:
+            self.set_validation_error('Recipient pof_offer_accepted not specified')
+
+    def set_validation_error(self, message):
+        raise ValueError(message)
 
     def map(self):
         return {

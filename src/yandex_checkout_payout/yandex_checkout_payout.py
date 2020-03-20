@@ -3,8 +3,6 @@
 import uuid
 from os.path import abspath
 
-import var_dump
-
 from yandex_checkout_payout.domain.common.client import ApiClient
 from yandex_checkout_payout.domain.common.generator_csr import GeneratorCsr
 from yandex_checkout_payout.domain.exceptions.api_error import ApiError
@@ -17,8 +15,10 @@ from yandex_checkout_payout.domain.response.deposition_response_builder import D
 from yandex_checkout_payout.domain.response.synonym_card_response import SynonymCardResponse
 
 
-class YandexCheckoutPayout:
+class YandexCheckoutPayout(object):
+    """
 
+    """
     def __init__(self):
         self.client = ApiClient()
         self.agent_id = self.client.configuration.agent_id
@@ -70,6 +70,8 @@ class YandexCheckoutPayout:
             request = params
         else:
             raise ApiError('Unsupported data format!')
+
+        request.validate()
 
         response = instance.client.request(path.format(request.request_name), request)
         return DepositionResponseBuilder.build(response)

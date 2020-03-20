@@ -4,10 +4,7 @@
 import unittest
 import uuid
 from os.path import abspath
-
 from subprocess import Popen, PIPE
-
-import var_dump
 from OpenSSL import crypto
 from lxml import etree
 
@@ -54,7 +51,7 @@ class TestYandexCheckoutPayout(unittest.TestCase):
         # var_dump.var_dump(output)
         parser = etree.XMLParser(recover=True, encoding='utf-8')
         root = etree.fromstring(output, parser)
-        var_dump.var_dump(root.attrib)
+        # var_dump.var_dump(root.attrib)
 
         assert output is not None
 
@@ -62,42 +59,6 @@ class TestYandexCheckoutPayout(unittest.TestCase):
         p_key = crypto.load_privatekey(crypto.FILETYPE_PEM, OpenSSLHelper.from_file('./files/privateKey.pem'), "12345".encode('utf-8'))
         dump_privatekey = crypto.dump_privatekey(crypto.FILETYPE_PEM, p_key)
         OpenSSLHelper.to_file('./files/privateKey.open', dump_privatekey)
-
-    def test_http_client(self):
-        import http.client
-        import json
-        import ssl
-
-        # Defining certificate related stuff and host of endpoint
-        certificate_file = 'a_certificate_file.pem'
-        certificate_secret = 'your_certificate_secret'
-        host = 'example.com'
-
-        # Defining parts of the HTTP request
-        request_url = '/a/http/url'
-        request_headers = {
-            'Content-Type': 'application/json'
-        }
-        request_body_dict = {
-            'Temperature': 38,
-            'Humidity': 80
-        }
-
-        # Define the client certificate settings for https connection
-        context = ssl.SSLContext(ssl.PROTOCOL_SSLv23)
-        context.load_cert_chain(certfile=certificate_file, password=certificate_secret)
-
-        # Create a connection to submit HTTP requests
-        connection = http.client.HTTPSConnection(host, port=443, context=context)
-
-        # Use connection to submit a HTTP POST request
-        connection.request(method="POST", url=request_url, headers=request_headers, body=json.dumps(request_body_dict))
-
-        # Print the HTTP response from the IOT service endpoint
-        response = connection.getresponse()
-        print(response.status, response.reason)
-        data = response.read()
-        print(data)
 
     def test_generate_private_key(self):
         # output = OpenSSLHelper.create_private_key(abspath('./files/output/privateKey.pem'), '12341')
@@ -121,36 +82,10 @@ class TestYandexCheckoutPayout(unittest.TestCase):
         gen = GeneratorCsr('12345', org, abspath('./files/output2'))
         gen.generate_all()
 
-    def test_popen(self):
-        keychain = KeyChain(abspath('./files/250000.cer'), abspath('./files/privateKey.pem'), '')
-        cmd = [
-            'openssl', 'smime', '-sign', '-signer', keychain.public_cert, '-inkey', keychain.private_key,
-            '-nochain', '-nocerts', '-outform', 'PEM', '-nodetach', '-passin', 'pass:' + keychain.key_password,
-            '<', abspath('./files/test.xml')
-        ]
-        # '-passin', 'pass:' + keychain.key_password,
-        # with open('./files/test.xml', encoding="utf-8") as data_file:
-        #     data = data_file.read()
-
-        proc = Popen(
-            ' '.join(cmd),
-            shell=True,
-            stdin=PIPE, stdout=PIPE, stderr=PIPE
-        )
-        pss = keychain.key_password.encode() if keychain.key_password.__len__() else "0".encode()
-        out, err = proc.communicate(input=pss)
-        # out, err = proc.communicate()
-        proc.wait()  # дождаться выполнения
-        res = proc.communicate()  # получить tuple('stdout', 'stderr')
-        var_dump.var_dump(proc, res)
-        # if proc.returncode:
-        #     print(res[1].decode("utf-8"))
-        # print('result:', res[0].decode("utf-8"))
-
     def test_balance_request(self):
         client_order_id = uuid.uuid4()
         request = BalanceRequest({"agent_id": 123456, "client_order_id": client_order_id})
-        var_dump.var_dump(request.map())
+        # var_dump.var_dump(request.map())
 
     def test_client_balance_request(self):
         keychain = KeyChain(abspath('./files/250000.cer'), abspath('./files/privateKey.pem'), '12345')
@@ -170,7 +105,7 @@ class TestYandexCheckoutPayout(unittest.TestCase):
             "balance": 1000.0,
             "processedDT": "2011-07-01T20:38:01.666Z"
         })
-        var_dump.var_dump(dict(response))
+        # var_dump.var_dump(dict(response))
 
     def test_xml2object(self):
         xml_string = """
@@ -182,8 +117,8 @@ class TestYandexCheckoutPayout(unittest.TestCase):
 
         python_object = XMLHelper.xml_to_object(xml_string)
 
-        var_dump.var_dump(xml_string)
-        var_dump.var_dump(python_object)
+        # var_dump.var_dump(xml_string)
+        # var_dump.var_dump(python_object)
 
         response = BalanceResponse(python_object['balanceResponse'])
         print(dict(response))
@@ -200,8 +135,8 @@ class TestYandexCheckoutPayout(unittest.TestCase):
 
         xml_string = XMLHelper.object_to_xml(python_object)
 
-        var_dump.var_dump(python_object)
-        var_dump.var_dump(xml_string)
+        # var_dump.var_dump(python_object)
+        # var_dump.var_dump(xml_string)
 
     def test_hard_object2xml(self):
         # client_order_id = uuid.uuid4()
@@ -229,5 +164,5 @@ class TestYandexCheckoutPayout(unittest.TestCase):
         }}
 
         xml_string = XMLHelper.object_to_xml(python_object)
-        var_dump.var_dump(python_object)
-        var_dump.var_dump(xml_string)
+        # var_dump.var_dump(python_object)
+        # var_dump.var_dump(xml_string)

@@ -9,7 +9,7 @@ class MakeDepositionRequest(DepositionRequest):
     __payment_params = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(MakeDepositionRequest, self).__init__(*args, **kwargs)
         self.request_name = 'makeDeposition'
 
     @property
@@ -24,6 +24,11 @@ class MakeDepositionRequest(DepositionRequest):
             self.__payment_params = RecipientFactory.factory(value)
         else:
             raise TypeError('Invalid payment_params value type')
+
+    def validate(self):
+        super(MakeDepositionRequest, self).validate()
+        if not self.payment_params:
+            self.set_validation_error('Deposition payment_params not specified')
 
     def map(self):
         _map = super().map()

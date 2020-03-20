@@ -1,24 +1,36 @@
 # -*- coding: utf-8 -*-
+import sys
 import unittest
-import uuid
 
 from os.path import abspath
-
-from var_dump import var_dump
-
 from yandex_checkout_payout.configuration import Configuration
 from yandex_checkout_payout.domain.common.keychain import KeyChain
 from yandex_checkout_payout.domain.notification.error_deposition_notification import ErrorDepositionNotification
+from yandex_checkout_payout.domain.notification.error_deposition_notification_request import \
+    ErrorDepositionNotificationRequest
 
 
 class TestNotification(unittest.TestCase):
 
     def setUp(self):  # Set the keychain for all tests
-        keychain = KeyChain(abspath('../files/250000.cer'), abspath('../files/privateKey.pem'), '12345')
+        keychain = KeyChain(abspath('files/250000.cer'), abspath('files/privateKey.pem'), '12345')
         Configuration.configure(250000, keychain)
 
     def test_request(self):
-        data = b'-----BEGIN PKCS7-----\r\n' \
+        data = self.get_input_data()
+        request = ErrorDepositionNotification.input(data)
+        self.assertIsInstance(request, ErrorDepositionNotificationRequest)
+        self.assertEqual(request.client_order_id, '31667117')
+        self.assertEqual(request.error, 31)
+
+    def test_response(self):
+        status = 0
+        response = ErrorDepositionNotification.output(status)
+        self.assertIn("-----BEGIN PKCS7-----", response)
+
+    @staticmethod
+    def get_input_data():
+        return b'-----BEGIN PKCS7-----\r\n' \
                b'MIAGCSqGSIb3DQEHAqCAMIACAQExCzAJBgUrDgMCGgUAMIAGCSqGSIb3DQEHAaCA\r\n' \
                b'JIAEgac8ZXJyb3JEZXBvc2l0aW9uTm90aWZpY2F0aW9uUmVxdWVzdCBjbGllbnRP\r\n' \
                b'cmRlcklkPSIzMTY2NzExNyIgcmVxdWVzdERUPSIyMDIwLTAzLTEwVDIxOjQ4OjE3\r\n' \
@@ -37,14 +49,3 @@ class TestNotification(unittest.TestCase):
                b'Z8ZbPrZY+Fl9H6t6GiMLWNuveOvBIfC5UvDSV2olsrVTl9qRtgXBQSF2O9wPSX1k\r\n' \
                b'9P2oWQ3dB/pDK4JKWIAVfaMTUdrIF4V2Wgdbd5YAAAAAAAA=\r\n' \
                b'-----END PKCS7-----\r\n'
-        request = ErrorDepositionNotification.input(data)
-        var_dump(request)
-        # self.assertIsInstance(response, BalanceResponse)
-        # self.assertEqual(response.client_order_id, client_order_id)
-
-    def test_response(self):
-        status = 0
-        response = ErrorDepositionNotification.output(status)
-        var_dump(response)
-        # self.assertIsInstance(response, BalanceResponse)
-        # self.assertEqual(response.client_order_id, client_order_id)

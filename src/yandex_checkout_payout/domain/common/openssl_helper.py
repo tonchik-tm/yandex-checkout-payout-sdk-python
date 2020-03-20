@@ -3,13 +3,12 @@ import os
 import re
 import subprocess
 from os.path import abspath
-
 from OpenSSL import crypto
 
 from yandex_checkout_payout.domain.exceptions.open_ssl_error import OpenSSLError
 
 
-class OpenSSLHelper:
+class OpenSSLHelper(object):
     """
     A helper for work with SSL.
     """
@@ -30,9 +29,9 @@ class OpenSSLHelper:
     @staticmethod
     def encrypt_pkcs7(data, keychain):
         cmd = [
-                'openssl', 'smime', '-sign', '-signer', keychain.public_cert, '-inkey', keychain.private_key,
-                '-passin', 'pass:' + keychain.key_password, '-nochain', '-nocerts', '-outform', 'PEM', '-nodetach'
-              ]
+            'openssl', 'smime', '-sign', '-signer', keychain.public_cert, '-inkey', keychain.private_key,
+            '-passin', 'pass:' + keychain.key_password, '-nochain', '-nocerts', '-outform', 'PEM', '-nodetach'
+        ]
 
         return OpenSSLHelper.exec_cmd(cmd, data)
 
@@ -122,8 +121,9 @@ class OpenSSLHelper:
         return signature
 
     """"""
+
     @staticmethod
-    def exec_cmd(cmd: list, data: str):
+    def exec_cmd(cmd, data):
         r"""
         :param cmd: list
         :param data: str

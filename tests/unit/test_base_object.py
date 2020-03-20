@@ -90,4 +90,4 @@ class TestBaseObject(unittest.TestCase):
 
     def test_to_dict(self):
         base_object = MyBaseObject(self.fixture_args)
-        print(dict(base_object))
+        self.assertEqual(self.fixture_args, dict(base_object))

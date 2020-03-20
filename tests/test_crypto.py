@@ -1,9 +1,7 @@
-import base64
+# -*- coding: utf-8 -*-
 import re
 import unittest
-from binascii import hexlify
 
-import var_dump
 from OpenSSL import crypto
 
 from yandex_checkout_payout.domain.common.openssl_helper import OpenSSLHelper
@@ -124,30 +122,3 @@ class TestAll(unittest.TestCase):
             "SubjectPublicKeyPEM": crypto.dump_publickey(crypto.FILETYPE_PEM, certobj.get_pubkey()),
             "Version": certobj.get_version()
         }
-
-        var_dump.var_dump(certDetails)
-
-    def test_p7s(self):
-        with open('clientcert.crt') as cert_file:
-            cert_buf = cert_file.read()
-
-        with open('clientkey.key') as key_file:
-            key_buf = key_file.read()
-
-        pkey = crypto.load_privatekey(crypto.FILETYPE_PEM, key_buf, '12345678'.encode())
-        signcert = crypto.load_certificate(crypto.FILETYPE_PEM, cert_buf.encode())
-
-        text = "Test text"
-
-        # bio_in = crypto._new_mem_buf(text.encode())
-        # PKCS7_NOSIGS = 0x4  # defined in pkcs7.h
-        # pkcs7 = crypto._lib.PKCS7_sign(signcert._x509, pkey._pkey, crypto._ffi.NULL, bio_in, PKCS7_NOSIGS)  # noqa
-        # bio_out = crypto._new_mem_buf()
-        # crypto._lib.i2d_PKCS7_bio(bio_out, pkcs7)
-        # sigbytes = crypto._bio_to_string(bio_out)
-
-        crypto.load_pkcs7_data()
-        crypto.to
-
-        with open('test.p7s', 'w') as tst:
-            tst.write(str(pkcs7))
