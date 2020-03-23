@@ -5,6 +5,7 @@ import unittest
 from dateutil import tz
 
 from yandex_checkout_payout.domain.common.currency import Currency
+from yandex_checkout_payout.domain.common.data_context import DataContext
 from yandex_checkout_payout.domain.notification.error_deposition_notification_request import \
     ErrorDepositionNotificationRequest
 
@@ -28,6 +29,8 @@ class TestNotificationRequest(unittest.TestCase):
             'currency': Currency.RUB,
             'error': 0,
         }, dict(req))
+
+        self.assertEqual(req.context(), DataContext.REQUEST)
 
     def test_request_setters(self):
         req = ErrorDepositionNotificationRequest({
@@ -58,8 +61,11 @@ class TestNotificationRequest(unittest.TestCase):
         self.assertIsInstance(req.error, int)
         self.assertEqual(req.error, 0)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             req.request_dt = 'invalid common_name'
+
+        with self.assertRaises(TypeError):
+            req.request_dt = object()
 
     def test_request_validate(self):
         req = ErrorDepositionNotificationRequest()
@@ -72,6 +78,10 @@ class TestNotificationRequest(unittest.TestCase):
             req.validate()
 
         req.request_dt = '2020-03-04T15:39:45.456+03:00'
+        with self.assertRaises(ValueError):
+            req.validate()
+
+        req.request_dt = datetime.datetime(2020, 3, 4, 15, 39, 45, 456000, tzinfo=tz.gettz('Europe/Moscow'))
         with self.assertRaises(ValueError):
             req.validate()
 

@@ -47,7 +47,7 @@ class ErrorDepositionNotificationResponse(BaseObject):
             try:
                 self.__processed_dt = parser.parse(value)  # '%Y-%m-%dT%H:%M:%S.%f%z'
             except Exception:
-                raise TypeError('Invalid processed_dt value type')
+                raise ValueError('Invalid processed_dt value')
         elif isinstance(value, datetime.datetime):
             self.__processed_dt = value
         else:

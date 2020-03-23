@@ -28,14 +28,11 @@ class BalanceRequest(RequestObject):
         self.__client_order_id = str(value)
 
     def validate(self):
-        if self.agent_id is None:
-            self.__set_validation_error('Balance agent_id not specified')
-
-        if self.client_order_id is None:
-            self.__set_validation_error('Balance client_order_id not specified')
-
-    def __set_validation_error(self, message):
-        raise ValueError(message)
+        super(BalanceRequest, self).validate()
+        if not self.agent_id:
+            self.set_validation_error('Balance agent_id not specified')
+        if not self.client_order_id:
+            self.set_validation_error('Balance client_order_id not specified')
 
     def map(self):
         _map = super(BalanceRequest, self).map()

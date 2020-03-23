@@ -4,6 +4,7 @@ import unittest
 
 from dateutil import tz
 
+from yandex_checkout_payout.domain.common.data_context import DataContext
 from yandex_checkout_payout.domain.notification.error_deposition_notification_request import \
     ErrorDepositionNotificationRequest
 from yandex_checkout_payout.domain.notification.error_deposition_notification_response import \
@@ -24,6 +25,8 @@ class TestNotificationResponse(unittest.TestCase):
             'status': 0,
         }, dict(res))
 
+        self.assertEqual(res.context(), DataContext.RESPONSE)
+
     def test_response_setters(self):
         req = ErrorDepositionNotificationResponse({
             'client_order_id': '215d8da0-000f-50be-b000-0003308c89be',
@@ -38,8 +41,11 @@ class TestNotificationResponse(unittest.TestCase):
         self.assertIsInstance(req.status, int)
         self.assertEqual(req.status, 0)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             req.processed_dt = 'invalid common_name'
+
+        with self.assertRaises(TypeError):
+            req.processed_dt = object()
 
     def test_response_validate(self):
         req = ErrorDepositionNotificationResponse()
@@ -55,9 +61,26 @@ class TestNotificationResponse(unittest.TestCase):
         with self.assertRaises(ValueError):
             req.validate()
 
+        req.processed_dt = datetime.datetime(2020, 3, 4, 15, 39, 45, 456000, tzinfo=tz.gettz('Europe/Moscow'))
+        with self.assertRaises(ValueError):
+            req.validate()
+
         req = ErrorDepositionNotificationRequest({
             'client_order_id': '215d8da0-000f-50be-b000-0003308c89be',
         })
         req.status = 0
         with self.assertRaises(ValueError):
             req.validate()
+
+    def test_response_map(self):
+        req = ErrorDepositionNotificationResponse({
+            'client_order_id': '215d8da0-000f-50be-b000-0003308c89be',
+            'status': '0',
+        })
+        self.assertEqual(req.map(), {
+            "ErrorDepositionNotificationResponse": {
+                "clientOrderId": req.client_order_id,
+                "processedDT": req.processed_dt.strftime('%Y-%m-%dT%H:%M:%S.%f%z'),
+                "status": req.status,
+            }
+        })

@@ -15,7 +15,7 @@ class BalanceResponse(ResponseObject):
 
     @agent_id.setter
     def agent_id(self, value):
-        self.__agent_id = str(value)
+        self.__agent_id = int(value)
 
     @property
     def client_order_id(self):
@@ -34,17 +34,16 @@ class BalanceResponse(ResponseObject):
         self.__balance = float(value)
 
     def validate(self):
-        if self.agent_id is None:
-            self.__set_validation_error('Balance agent_id not specified')
+        if not self.agent_id:
+            self.set_validation_error('Balance agent_id not specified')
+        if not self.client_order_id:
+            self.set_validation_error('Balance client_order_id not specified')
 
-        if self.client_order_id is None:
-            self.__set_validation_error('Balance client_order_id not specified')
-
-    def __set_validation_error(self, message):
+    def set_validation_error(self, message):
         raise ValueError(message)
 
     def map_in(self):
-        _map = super().map_in()
+        _map = super(BalanceResponse, self).map_in()
         _map.update({
             "agentId": "agent_id",
             "clientOrderId": "client_order_id",

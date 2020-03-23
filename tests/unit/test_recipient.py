@@ -19,3 +19,11 @@ class TestRecipient(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             rec.pof_offer_accepted = 'invalid pof_offer_accepted'
+
+    def test_recipient_map(self):
+        rec = Recipient({
+            'pof_offer_accepted': True,
+        })
+        self.assertEqual(rec.map(), {
+            "pof_offerAccepted": [str(int(rec.pof_offer_accepted))],
+        })

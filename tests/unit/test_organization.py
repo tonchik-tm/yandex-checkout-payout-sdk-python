@@ -60,6 +60,9 @@ class TestOrganization(unittest.TestCase):
         with self.assertRaises(ValueError):
             org.common_name = 'invalid common_name'
 
+        with self.assertRaises(ValueError):
+            org.email = 'cms@yamoneyru'
+
     def test_organization_validate(self):
         org = Organization()
 
@@ -91,3 +94,8 @@ class TestOrganization(unittest.TestCase):
         org.email = 'cms@yamoney.ru'
         with self.assertRaises(ValueError):
             org.validate()
+
+        self.assertEqual(org.verify(), False)
+
+        org.org_name = 'Yandex Money'
+        self.assertEqual(org.verify(), True)

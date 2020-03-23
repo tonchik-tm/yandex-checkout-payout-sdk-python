@@ -38,7 +38,7 @@ class RequestObject(BaseObject):
             try:
                 self.__request_dt = parser.parse(value)  # , '%Y-%m-%dT%H:%M:%S.%f%z'
             except Exception:
-                raise TypeError('Invalid request_dt value type')
+                raise ValueError('Invalid request_dt value')
         elif isinstance(value, datetime.datetime):
             self.__request_dt = value
         else:
@@ -57,7 +57,8 @@ class RequestObject(BaseObject):
         }
 
     def validate(self):
-        """
-        Validate request data
-        """
-        pass
+        if not self.request_name:
+            self.set_validation_error('RequestObject request_name not specified')
+
+    def set_validation_error(self, message):
+        raise ValueError(message)

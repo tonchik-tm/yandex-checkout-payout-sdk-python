@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from yandex_checkout_payout.domain.exceptions.api_error import ApiError
 
 
 class ErrorConverter:
@@ -53,4 +54,4 @@ class ErrorConverter:
         if error in _list:
             return _list[error]
         else:
-            return 'Unknown error #' + error
+            raise ApiError('Unknown error #' + str(error))

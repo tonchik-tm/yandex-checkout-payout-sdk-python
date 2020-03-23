@@ -21,7 +21,7 @@ class ErrorDepositionNotification:
         if 'errorDepositionNotificationRequest' in data:
             return ErrorDepositionNotificationRequest(data['errorDepositionNotificationRequest'])
         else:
-            raise ApiError('')
+            raise ApiError('Invalid ErrorDepositionNotificationRequest')
 
     @classmethod
     def output(cls, status):
@@ -31,4 +31,4 @@ class ErrorDepositionNotification:
         if request:
             return request.decode("utf-8")
         else:
-            raise ApiError('')
+            raise ApiError('Cannot create ErrorDepositionNotificationResponse')

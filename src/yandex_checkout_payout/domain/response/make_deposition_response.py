@@ -15,7 +15,7 @@ class MakeDepositionResponse(DepositionResponse):
         self.__balance = float(value)
 
     def map_in(self):
-        _map = super().map_in()
+        _map = super(MakeDepositionResponse, self).map_in()
         _map.update({
             "balance": "balance",
         })

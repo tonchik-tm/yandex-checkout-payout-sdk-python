@@ -152,21 +152,21 @@ class BankCardRecipient(Recipient):
     def validate(self):
         super(BankCardRecipient, self).validate()
         if not self.skr_destination_card_synonym:
-            self.set_validation_error('BankAccountRecipient skr_destination_card_synonym not specified')
+            self.set_validation_error('BankCardRecipient skr_destination_card_synonym not specified')
         if not self.pdr_first_name:
-            self.set_validation_error('BankAccountRecipient pdr_first_name not specified')
+            self.set_validation_error('BankCardRecipient pdr_first_name not specified')
         if not self.pdr_last_name:
-            self.set_validation_error('BankAccountRecipient pdr_last_name not specified')
+            self.set_validation_error('BankCardRecipient pdr_last_name not specified')
         if not self.pdr_doc_number:
-            self.set_validation_error('BankAccountRecipient pdr_doc_number not specified')
+            self.set_validation_error('BankCardRecipient pdr_doc_number not specified')
         if not self.pdr_doc_issue_date:
-            self.set_validation_error('BankAccountRecipient pdr_doc_issue_date not specified')
+            self.set_validation_error('BankCardRecipient pdr_doc_issue_date not specified')
         if not self.pdr_country:
-            self.set_validation_error('BankAccountRecipient pdr_country not specified')
+            self.set_validation_error('BankCardRecipient pdr_country not specified')
         if not self.pdr_birth_date:
-            self.set_validation_error('BankAccountRecipient pdr_birth_date not specified')
+            self.set_validation_error('BankCardRecipient pdr_birth_date not specified')
         if not self.sms_phone_number:
-            self.set_validation_error('BankAccountRecipient sms_phone_number not specified')
+            self.set_validation_error('BankCardRecipient sms_phone_number not specified')
 
     def map(self):
         _map = super(BankCardRecipient, self).map()

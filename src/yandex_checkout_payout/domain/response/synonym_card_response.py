@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from yandex_checkout_payout.domain.common.base_object import BaseObject
+from yandex_checkout_payout.domain.common.data_context import DataContext
 
 
 class SynonymCardResponse(BaseObject):
 
-    __id = None
     __panmask = None
     __synonym = None
     __reason = None
@@ -21,14 +21,6 @@ class SynonymCardResponse(BaseObject):
     @panmask.setter
     def panmask(self, value):
         self.__panmask = str(value)
-
-    @property
-    def id(self):
-        return self.__id
-
-    @id.setter
-    def id(self, value):
-        self.__id = int(value)
 
     @property
     def synonym(self):
@@ -87,24 +79,27 @@ class SynonymCardResponse(BaseObject):
         self.__product_code = str(value)
 
     def validate(self):
-        if self.panmask is None:
+        if not self.panmask:
             self.__set_validation_error('SynonymCard panmask not specified')
 
-        if self.synonym is None:
+        if not self.synonym:
             self.__set_validation_error('SynonymCard synonym not specified')
 
-        if self.reason is None:
+        if not self.reason:
             self.__set_validation_error('SynonymCard reason not specified')
 
     def __set_validation_error(self, message):
         raise ValueError(message)
+
+    @staticmethod
+    def context():
+        return DataContext.RESPONSE
 
     def map_in(self):
         return {
             "skr_destinationCardPanmask": "panmask",
             "skr_destinationCardSynonim": "synonym",
             "reason": "reason",
-            "skr_int_id": "id",
             "skr_destinationCardBankName": "bank_name",
             "skr_destinationCardCountryCode": "country_code",
             "skr_destinationCardPaymentSystem": "payment_system",
