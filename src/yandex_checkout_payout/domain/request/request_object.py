@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from dateutil import parser
+
 from yandex_checkout_payout.domain.common.base_object import BaseObject
 from yandex_checkout_payout.domain.common.data_context import DataContext
 
@@ -34,7 +36,7 @@ class RequestObject(BaseObject):
     def request_dt(self, value):
         if isinstance(value, str):
             try:
-                self.__request_dt = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
+                self.__request_dt = parser.parse(value)  # , '%Y-%m-%dT%H:%M:%S.%f%z'
             except Exception:
                 raise TypeError('Invalid request_dt value type')
         elif isinstance(value, datetime.datetime):

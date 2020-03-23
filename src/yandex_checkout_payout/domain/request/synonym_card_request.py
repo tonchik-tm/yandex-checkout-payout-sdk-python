@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import datetime
 
 from yandex_checkout_payout.domain.common.base_object import BaseObject
 from yandex_checkout_payout.domain.common.data_context import DataContext

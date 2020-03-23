@@ -1,23 +1,33 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from dateutil import parser
+
 from yandex_checkout_payout.domain.common.base_object import BaseObject
 from yandex_checkout_payout.domain.common.data_context import DataContext
 
 
 class ErrorDepositionNotificationResponse(BaseObject):
 
-    __processed_dt = None
     __client_order_id = None
     __status = None
+    __processed_dt = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(ErrorDepositionNotificationResponse, self).__init__(*args, **kwargs)
         self.processed_dt = datetime.datetime.now()
 
     @staticmethod
     def context():
         return DataContext.RESPONSE
+
+    @property
+    def client_order_id(self):
+        return self.__client_order_id
+
+    @client_order_id.setter
+    def client_order_id(self, value):
+        self.__client_order_id = str(value)
 
     @property
     def status(self):
@@ -35,21 +45,13 @@ class ErrorDepositionNotificationResponse(BaseObject):
     def processed_dt(self, value):
         if isinstance(value, str):
             try:
-                self.__processed_dt = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
+                self.__processed_dt = parser.parse(value)  # '%Y-%m-%dT%H:%M:%S.%f%z'
             except Exception:
                 raise TypeError('Invalid processed_dt value type')
         elif isinstance(value, datetime.datetime):
             self.__processed_dt = value
         else:
             raise TypeError('Invalid processed_dt value type')
-
-    @property
-    def client_order_id(self):
-        return self.__client_order_id
-
-    @client_order_id.setter
-    def client_order_id(self, value):
-        self.__client_order_id = str(value)
 
     def validate(self):
         if self.client_order_id is None:

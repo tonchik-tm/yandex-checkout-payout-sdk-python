@@ -66,7 +66,7 @@ class Organization(BaseObject):
     def common_name(self, value):
         cast_value = str(value).replace('/business/', '')
         if re.match(r"^[a-z]+$", cast_value):
-            self.__common_name = '/business/' + value
+            self.__common_name = '/business/' + cast_value
         else:
             raise ValueError('Invalid common_name value')
 
@@ -82,8 +82,23 @@ class Organization(BaseObject):
         else:
             raise ValueError('Invalid email value type')
 
+    def validate(self):
+        if self.country_name is None:
+            self.__set_validation_error('Organization country_name not specified')
+        if self.state is None:
+            self.__set_validation_error('Organization state not specified')
+        if self.org_name is None:
+            self.__set_validation_error('Organization org_name not specified')
+        if self.common_name is None:
+            self.__set_validation_error('Organization common_name not specified')
+        if self.email is None:
+            self.__set_validation_error('Organization email not specified')
+
     def verify(self):
         if not self.common_name or not self.email or not self.org_name or not self.country_name or not self.state:
             return False
         else:
             return True
+
+    def __set_validation_error(self, message):
+        raise ValueError(message)

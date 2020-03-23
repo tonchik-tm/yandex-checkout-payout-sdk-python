@@ -16,6 +16,6 @@ class RecipientFactory(object):
             elif 'pof_offer_accepted' in data:
                 return Recipient(data)
             else:
-                ValueError('Invalid recipient_factory value')
+                raise ValueError('Invalid recipient_factory value')
         else:
-            TypeError('Invalid recipient_factory value type')
+            raise TypeError('Invalid recipient_factory value type')

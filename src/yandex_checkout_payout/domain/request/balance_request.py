@@ -17,7 +17,7 @@ class BalanceRequest(RequestObject):
 
     @agent_id.setter
     def agent_id(self, value):
-        self.__agent_id = str(value)
+        self.__agent_id = int(value)
 
     @property
     def client_order_id(self):

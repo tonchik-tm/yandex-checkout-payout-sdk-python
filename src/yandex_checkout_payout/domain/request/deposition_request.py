@@ -12,7 +12,7 @@ class DepositionRequest(RequestObject):
     __contract = None
 
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+        super(DepositionRequest, self).__init__(*args, **kwargs)
         self.request_name = 'deposition'
 
     @property
@@ -21,7 +21,7 @@ class DepositionRequest(RequestObject):
 
     @agent_id.setter
     def agent_id(self, value):
-        self.__agent_id = str(value)
+        self.__agent_id = int(value)
 
     @property
     def client_order_id(self):
@@ -64,17 +64,16 @@ class DepositionRequest(RequestObject):
         self.__contract = str(value)
 
     def validate(self):
-        if self.agent_id is None:
-            self.__set_validation_error('Deposition agent_id not specified')
+        if not self.agent_id:
+            self.set_validation_error('Deposition agent_id not specified')
+        if not self.client_order_id:
+            self.set_validation_error('Deposition client_order_id not specified')
 
-        if self.client_order_id is None:
-            self.__set_validation_error('Deposition client_order_id not specified')
-
-    def __set_validation_error(self, message):
+    def set_validation_error(self, message):
         raise ValueError(message)
 
     def map(self):
-        _map = super().map()
+        _map = super(DepositionRequest, self).map()
         _map.update({
             "agentId": self.agent_id,
             "clientOrderId": self.client_order_id,

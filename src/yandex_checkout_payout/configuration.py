@@ -9,12 +9,11 @@ class ConfigurationError(Exception):
     pass
 
 
-class Configuration(object):
+class Configuration:
     """
     A class representing the configuration.
     """
     api_url = "https://calypso.yamoney.ru:9094/"
-    # api_url = "https://bo-demo02.yamoney.ru:9094/"
     synonym_card_url = "https://paymentcard.yamoney.ru/"
     agent_id = None
     keychain = None
@@ -22,9 +21,6 @@ class Configuration(object):
     timeout = 1800
     max_attempts = 3
     yandex_cert = os.path.dirname(os.path.abspath(__file__)) + '/artefacts/deposit.cer'
-    # agent_framework = None
-    # agent_cms = None
-    # agent_module = None
 
     def __init__(self, **kwargs):
         self.assert_has_api_credentials()
@@ -36,15 +32,6 @@ class Configuration(object):
         Configuration.timeout = kwargs.get("timeout", 1800)
         Configuration.max_attempts = kwargs.get("max_attempts", 3)
         Configuration.configure_logger(logger)
-
-    # @staticmethod
-    # def configure_user_agent(framework=None, cms=None, module=None):
-    #     if isinstance(framework, Version):
-    #         Configuration.agent_framework = framework
-    #     if isinstance(cms, Version):
-    #         Configuration.agent_cms = cms
-    #     if isinstance(module, Version):
-    #         Configuration.agent_module = module
 
     @staticmethod
     def configure_keychain(keychain):

@@ -112,7 +112,7 @@ class BankAccountRecipient(Recipient):
             try:
                 self.__pdr_doc_issue_date = datetime.datetime.strptime(value, '%Y-%m-%d').date()
             except Exception:
-                raise TypeError('Invalid pdr_doc_issue_date value type')
+                raise ValueError('Invalid pdr_doc_issue_date value')
         elif isinstance(value, datetime.date):
             self.__pdr_doc_issue_date = value
         else:
@@ -140,7 +140,7 @@ class BankAccountRecipient(Recipient):
             try:
                 self.__pdr_birth_date = datetime.datetime.strptime(value, '%Y-%m-%d').date()
             except Exception:
-                raise TypeError('Invalid pdr_doc_issue_date value type')
+                raise ValueError('Invalid pdr_doc_issue_date value')
         elif isinstance(value, datetime.date):
             self.__pdr_birth_date = value
         else:
@@ -152,14 +152,45 @@ class BankAccountRecipient(Recipient):
 
     @sms_phone_number.setter
     def sms_phone_number(self, value):
-        cast_value = str(value)
+        cast_value = re.sub(r'[^\d]', '', str(value))
         if re.match('^[0-9]{4,15}$', cast_value):
             self.__sms_phone_number = cast_value
         else:
             raise ValueError('Invalid phone value type')
 
+    def validate(self):
+        super(BankAccountRecipient, self).validate()
+        if not self.bank_name:
+            self.set_validation_error('BankAccountRecipient bank_name not specified')
+        if not self.bank_city:
+            self.set_validation_error('BankAccountRecipient bank_city not specified')
+        if not self.bank_cor_account:
+            self.set_validation_error('BankAccountRecipient bank_cor_account not specified')
+        if not self.customer_account:
+            self.set_validation_error('BankAccountRecipient customer_account not specified')
+        if not self.bank_bik:
+            self.set_validation_error('BankAccountRecipient bank_bik not specified')
+        if not self.payment_purpose:
+            self.set_validation_error('BankAccountRecipient payment_purpose not specified')
+        if not self.pdr_first_name:
+            self.set_validation_error('BankAccountRecipient pdr_first_name not specified')
+        if not self.pdr_middle_name:
+            self.set_validation_error('BankAccountRecipient pdr_middle_name not specified')
+        if not self.pdr_last_name:
+            self.set_validation_error('BankAccountRecipient pdr_last_name not specified')
+        if not self.pdr_doc_number:
+            self.set_validation_error('BankAccountRecipient pdr_doc_number not specified')
+        if not self.pdr_doc_issue_date:
+            self.set_validation_error('BankAccountRecipient pdr_doc_issue_date not specified')
+        if not self.pdr_address:
+            self.set_validation_error('BankAccountRecipient pdr_address not specified')
+        if not self.pdr_birth_date:
+            self.set_validation_error('BankAccountRecipient pdr_birth_date not specified')
+        if not self.sms_phone_number:
+            self.set_validation_error('BankAccountRecipient sms_phone_number not specified')
+
     def map(self):
-        _map = super().map()
+        _map = super(BankAccountRecipient, self).map()
         _map.update({
             "BankName": [self.bank_name],
             "BankCity": [self.bank_city],

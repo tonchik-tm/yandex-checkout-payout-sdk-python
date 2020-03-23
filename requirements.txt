@@ -1,0 +1,6 @@
+nox
+urllib3
+requests
+lxml
+python-dateutil
+pyOpenSSL
