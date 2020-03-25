@@ -3,8 +3,6 @@
 import uuid
 from os.path import abspath
 
-import var_dump
-
 from yandex_checkout_payout.domain.common.client import ApiClient
 from yandex_checkout_payout.domain.common.generator_csr import GeneratorCsr
 from yandex_checkout_payout.domain.exceptions.api_error import ApiError
