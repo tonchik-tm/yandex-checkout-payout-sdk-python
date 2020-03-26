@@ -11,6 +11,11 @@ class GeneratorCsr:
     A helper for generate cert.
     """
 
+    FILE_KEY = 'client_key.pem'
+    FILE_CRT = 'client_cert.crt'
+    FILE_CSR = 'client_req.csr'
+    FILE_SIG = 'signature.txt'
+
     __key_password = None
     __organization = None
     __output_dir = None
@@ -33,16 +38,16 @@ class GeneratorCsr:
         ca_cert = OpenSSLHelper.create_certificate(ca_req, (ca_req, ca_key), 123456789, (0, 60 * 60 * 24 * 365))
 
         dump_privatekey = crypto.dump_privatekey(crypto.FILETYPE_PEM, ca_key, 'aes256', self.key_password.encode('utf-8'))
-        OpenSSLHelper.to_file(self.output_dir + '/client_key.pem', dump_privatekey)
+        OpenSSLHelper.to_file(self.output_dir + os.path.sep + self.FILE_KEY, dump_privatekey)
 
         dump_certificate = crypto.dump_certificate(crypto.FILETYPE_PEM, ca_cert)
-        OpenSSLHelper.to_file(self.output_dir + '/client_cert.crt', dump_certificate)
+        OpenSSLHelper.to_file(self.output_dir + os.path.sep + self.FILE_CRT, dump_certificate)
 
         dump_certificate_request = crypto.dump_certificate_request(crypto.FILETYPE_PEM, ca_req)
-        OpenSSLHelper.to_file(self.output_dir + '/client_req.csr', dump_certificate_request)
+        OpenSSLHelper.to_file(self.output_dir + os.path.sep + self.FILE_CSR, dump_certificate_request)
 
-        signature = OpenSSLHelper.create_signature(self.output_dir + '/client_req.csr')
-        OpenSSLHelper.to_file(self.output_dir + '/signature.txt', signature.encode('utf-8'))
+        signature = OpenSSLHelper.create_signature(self.output_dir + os.path.sep + self.FILE_CSR)
+        OpenSSLHelper.to_file(self.output_dir + os.path.sep + self.FILE_SIG, signature.encode('utf-8'))
 
         return
 
@@ -79,3 +84,11 @@ class GeneratorCsr:
         if not os.path.exists(value):
             os.makedirs(value)
         self.__output_dir = value
+
+    def get_file_list(self):
+        ret = {}
+        for ftype in ['FILE_KEY', 'FILE_CRT', 'FILE_CSR', 'FILE_SIG']:
+            path = self.output_dir + os.path.sep + getattr(self, ftype)
+            ret.update({ftype: {'path': path, 'exist': os.path.exists(path)}})
+
+        return ret

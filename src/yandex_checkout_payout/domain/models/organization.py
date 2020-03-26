@@ -40,6 +40,7 @@ class Organization(BaseObject):
 
     @locality.setter
     def locality(self, value):
+        value = '-' if not value else value
         self.__locality = value
 
     @property
@@ -56,6 +57,7 @@ class Organization(BaseObject):
 
     @org_unit_name.setter
     def org_unit_name(self, value):
+        value = '-' if not value else value
         self.__org_unit_name = value
 
     @property
