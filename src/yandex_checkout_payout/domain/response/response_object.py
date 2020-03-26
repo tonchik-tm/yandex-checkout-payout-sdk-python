@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import datetime
 
+from dateutil import parser
+
 from yandex_checkout_payout.domain.common.base_object import BaseObject
 from yandex_checkout_payout.domain.common.data_context import DataContext
 
@@ -20,7 +22,7 @@ class ResponseObject(BaseObject):
     @processed_dt.setter
     def processed_dt(self, value):
         if isinstance(value, str):
-            self.__processed_dt = datetime.datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f%z')
+            self.__processed_dt = parser.parse(value)
         elif isinstance(value, datetime.datetime):
             self.__processed_dt = value
         else:
