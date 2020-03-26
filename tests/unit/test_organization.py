@@ -18,9 +18,9 @@ class TestOrganization(unittest.TestCase):
         self.assertEqual({
             'country_name': 'RU',
             'state': 'Russia',
-            'locality': '',
+            'locality': '-',
             'org_name': 'Yandex Money',
-            'org_unit_name': '',
+            'org_unit_name': '-',
             'common_name': '/business/yamoney',
             'email': 'cms@yamoney.ru',
         }, dict(org))
@@ -43,13 +43,13 @@ class TestOrganization(unittest.TestCase):
         self.assertEqual(org.state, 'Russia')
 
         self.assertIsInstance(org.locality, str)
-        self.assertEqual(org.locality, '')
+        self.assertEqual(org.locality, '-')
 
         self.assertIsInstance(org.org_name, str)
         self.assertEqual(org.org_name, 'Yandex Money')
 
         self.assertIsInstance(org.org_unit_name, str)
-        self.assertEqual(org.org_unit_name, '')
+        self.assertEqual(org.org_unit_name, '-')
 
         self.assertIsInstance(org.common_name, str)
         self.assertEqual(org.common_name, '/business/yamoney')
