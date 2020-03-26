@@ -64,13 +64,11 @@ class DepositionRequest(RequestObject):
         self.__contract = str(value)
 
     def validate(self):
+        super(DepositionRequest, self).validate()
         if not self.agent_id:
             self.set_validation_error('Deposition agent_id not specified')
         if not self.client_order_id:
             self.set_validation_error('Deposition client_order_id not specified')
-
-    def set_validation_error(self, message):
-        raise ValueError(message)
 
     def map(self):
         _map = super(DepositionRequest, self).map()

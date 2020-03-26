@@ -50,6 +50,18 @@ class SynonymCardRequest(BaseObject):
     def context():
         return DataContext.REQUEST
 
+    def validate(self):
+        if not self.destination_card_number:
+            self.__set_validation_error('SynonymCardRequest destination_card_number not specified')
+        if not self.response_format:
+            self.__set_validation_error('SynonymCardRequest response_format not specified')
+
+    def verify(self):
+        if not self.destination_card_number or not self.response_format:
+            return False
+        else:
+            return True
+
     def map(self):
         """
         Mapping request data to protocol
@@ -61,8 +73,5 @@ class SynonymCardRequest(BaseObject):
             "skr_successUrl": self.success_url,
         }
 
-    def validate(self):
-        """
-        Validate request data
-        """
-        pass
+    def __set_validation_error(self, message):
+        raise ValueError(message)

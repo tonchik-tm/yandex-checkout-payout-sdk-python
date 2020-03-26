@@ -4,6 +4,7 @@ import unittest
 
 from dateutil import tz, parser
 
+from yandex_checkout_payout.domain.common.data_context import DataContext
 from yandex_checkout_payout.domain.request.request_object import RequestObject
 
 
@@ -18,14 +19,25 @@ class TestTestDepositionRequest(unittest.TestCase):
             'request_name': 'baseRequest'
         }, dict(request))
 
+        self.assertEqual(request.context(), DataContext.REQUEST)
+
     def test_request_setters(self):
         request = RequestObject()
 
         self.assertIsInstance(request.request_dt, datetime.datetime)
         self.assertEqual(request.request_name, 'baseRequest')
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             request.request_dt = 'invalid request_dt'
+
+        with self.assertRaises(TypeError):
+            request.request_dt = object()
+
+    def test_request_validate(self):
+        rec = RequestObject()
+        rec.request_name = ''
+        with self.assertRaises(ValueError):
+            rec.validate()
 
     def test_request_map(self):
         request = RequestObject()

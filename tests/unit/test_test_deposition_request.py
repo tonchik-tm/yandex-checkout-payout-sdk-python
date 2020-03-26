@@ -5,13 +5,13 @@ import unittest
 from dateutil import tz, parser
 
 from yandex_checkout_payout.domain.common.currency import Currency
-from yandex_checkout_payout.domain.request.test_deposition_request import TestDepositionRequest
+from yandex_checkout_payout.domain.request.test_deposition_request import TestDepositionRequest as TDepositionRequest
 
 
 class TestTestDepositionRequest(unittest.TestCase):
 
     def test_request_cast(self):
-        request = TestDepositionRequest()
+        request = TDepositionRequest()
         request.agent_id = 250000
         request.client_order_id = '215d8da0-000f-50be-b000-0003308c89be'
         request.request_dt = '2020-03-04T15:39:45.456+03:00'
@@ -24,7 +24,7 @@ class TestTestDepositionRequest(unittest.TestCase):
         }, dict(request))
 
     def test_request_setters(self):
-        request = TestDepositionRequest({
+        request = TDepositionRequest({
             'agent_id': 250000,
             'client_order_id': '215d8da0-000f-50be-b000-0003308c89be',
             'request_dt': '2020-03-04T15:39:45.456+03:00'
@@ -34,11 +34,14 @@ class TestTestDepositionRequest(unittest.TestCase):
         self.assertIsInstance(request.request_dt, datetime.datetime)
         self.assertEqual(request.request_name, 'testDeposition')
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             request.request_dt = 'invalid request_dt'
 
+        with self.assertRaises(TypeError):
+            request.request_dt = object()
+
     def test_request_validate(self):
-        request = TestDepositionRequest()
+        request = TDepositionRequest()
 
         with self.assertRaises(ValueError):
             request.validate()
@@ -58,7 +61,7 @@ class TestTestDepositionRequest(unittest.TestCase):
             request.validate()
 
     def test_request_map(self):
-        request = TestDepositionRequest(self.create_test_params())
+        request = TDepositionRequest(self.create_test_params())
         self.assertEqual(request.map(), {
             'testDepositionRequest': {
                 "requestDT": request.request_dt.strftime('%Y-%m-%dT%H:%M:%S.%f%z'),

@@ -120,7 +120,12 @@ class TestBankCardRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.sms_phone_number = 'invalid sms_phone_number'
 
-    def test_request_validate(self):
+        with self.assertRaises(ValueError):
+            rec.pdr_address = 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4, ' \
+                              'пос.Большие Васюки, ул.Комиссара Козявкина, д.4, ' \
+                              'пос.Большие Васюки, ул.Комиссара Козявкина, д.4'
+
+    def test_recipient_validate(self):
         rec = BankCardRecipient()
 
         with self.assertRaises(ValueError):
@@ -130,27 +135,11 @@ class TestBankCardRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.validate()
 
-        rec.bank_name = 'ПАО Сбербанк'
+        rec.skr_destination_card_synonym = 'oALesdd_h_YT6pzpJ10Kn5aB.SC.000.201906'
         with self.assertRaises(ValueError):
             rec.validate()
 
-        rec.bank_city = 'г.Москва'
-        with self.assertRaises(ValueError):
-            rec.validate()
-
-        rec.bank_cor_account = '30101810400000000225'
-        with self.assertRaises(ValueError):
-            rec.validate()
-
-        rec.customer_account = '40817810255030943620'
-        with self.assertRaises(ValueError):
-            rec.validate()
-
-        rec.bank_bik = '042809679'
-        with self.assertRaises(ValueError):
-            rec.validate()
-
-        rec.payment_purpose = 'Возврат по договору 25-001, без НДС'
+        rec.cps_ym_account = '79653457676'
         with self.assertRaises(ValueError):
             rec.validate()
 
@@ -174,7 +163,23 @@ class TestBankCardRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.validate()
 
+        rec.pdr_doc_issue_date = datetime.date(1999, 7, 30)
+        with self.assertRaises(ValueError):
+            rec.validate()
+
         rec.pdr_address = 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4'
+        with self.assertRaises(ValueError):
+            rec.validate()
+
+        rec.pdr_city = 'Санкт-Петербург'
+        with self.assertRaises(ValueError):
+            rec.validate()
+
+        rec.pdr_country = Currency.RUB
+        with self.assertRaises(ValueError):
+            rec.validate()
+
+        rec.pdr_postcode = 701152
         with self.assertRaises(ValueError):
             rec.validate()
 
@@ -182,7 +187,44 @@ class TestBankCardRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.validate()
 
+        rec.pdr_birth_date = datetime.date(1987, 5, 24)
+        with self.assertRaises(ValueError):
+            rec.validate()
+
         rec = BankCardRecipient()
         rec.sms_phone_number = '79653457676'
         with self.assertRaises(ValueError):
             rec.validate()
+
+    def test_recipient_map(self):
+        rec = BankCardRecipient({
+            'pof_offer_accepted': True,
+            'skr_destination_card_synonym': 'oALesdd_h_YT6pzpJ10Kn5aB.SC.000.201906',
+            'cps_ym_account': '79653457676',
+            'pdr_first_name': 'Владимир',
+            'pdr_middle_name': 'Владимирович',
+            'pdr_last_name': 'Владимиров',
+            'pdr_doc_number': '4002109067',
+            'pdr_doc_issue_date': '1999-07-30',
+            'pdr_address': 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4',
+            'pdr_city': 'Санкт-Петербург',
+            'pdr_country': Currency.RUB,
+            'pdr_postcode': 701152,
+            'pdr_birth_date': '1987-5-24',
+            'sms_phone_number': '+79653457676',
+        })
+        self.assertEqual(rec.map(), {
+            "pof_offerAccepted": [str(int(rec.pof_offer_accepted))],
+            "skr_destinationCardSynonim": [rec.skr_destination_card_synonym],
+            "smsPhoneNumber": [rec.sms_phone_number],
+            "pdr_firstName": [rec.pdr_first_name],
+            "pdr_middleName": [rec.pdr_middle_name],
+            "pdr_lastName": [rec.pdr_last_name],
+            "pdr_docNumber": [rec.pdr_doc_number],
+            "pdr_docIssueDate": [rec.pdr_doc_issue_date.strftime('%d.%m.%Y')],
+            "pdr_postcode": [str(rec.pdr_postcode)],
+            "pdr_country": [str(rec.pdr_country)],
+            "pdr_city": [rec.pdr_city],
+            "pdr_address": [rec.pdr_address],
+            "pdr_birthDate": [rec.pdr_birth_date.strftime('%d.%m.%Y')],
+        })

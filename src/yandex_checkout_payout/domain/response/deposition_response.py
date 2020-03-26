@@ -42,18 +42,17 @@ class DepositionResponse(ResponseObject):
         self.__identification = str(value)
 
     def validate(self):
-        if self.client_order_id is None:
-            self.__set_validation_error('Balance client_order_id not specified')
+        if not self.client_order_id:
+            self.set_validation_error('DepositionResponse client_order_id not specified')
 
-    def __set_validation_error(self, message):
+    def set_validation_error(self, message):
         raise ValueError(message)
 
     def map_in(self):
-        _map = super().map_in()
+        _map = super(DepositionResponse, self).map_in()
         _map.update({
             "agentId": "agent_id",
             "clientOrderId": "client_order_id",
-            "balance": "balance",
             "error": "error",
             "techMessage": "tech_message",
             "identification": "identification",

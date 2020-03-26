@@ -33,7 +33,7 @@ class ErrorDepositionNotificationRequest(BaseObject):
             try:
                 self.__request_dt = parser.parse(value)  # '%Y-%m-%dT%H:%M:%S.%f%z'
             except Exception:
-                raise TypeError('Invalid request_dt value type')
+                raise ValueError('Invalid request_dt value')
         elif isinstance(value, datetime.datetime):
             self.__request_dt = value
         else:

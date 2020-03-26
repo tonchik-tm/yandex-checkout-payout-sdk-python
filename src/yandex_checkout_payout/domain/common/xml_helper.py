@@ -145,9 +145,10 @@ class XML2Object:
         """
         processes XML string into Python data structure
         """
-        xml = re.search(r"<(\w+).*(</\1>|/>)", xml, flags=re.DOTALL).group()
+        xml = re.search(r"<(\w+).*(</\1>|/>)", xml, flags=re.DOTALL)
         if xml:
-            self._root = etree.fromstring(xml, self._parser)
+            root = xml.group()
+            self._root = etree.fromstring(root, self._parser)
             self.data = self._parse_xml_root()
             return self.data
         else:

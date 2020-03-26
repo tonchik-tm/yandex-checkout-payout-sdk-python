@@ -40,6 +40,7 @@ class Organization(BaseObject):
 
     @locality.setter
     def locality(self, value):
+        value = '-' if not value else value
         self.__locality = value
 
     @property
@@ -56,6 +57,7 @@ class Organization(BaseObject):
 
     @org_unit_name.setter
     def org_unit_name(self, value):
+        value = '-' if not value else value
         self.__org_unit_name = value
 
     @property
@@ -83,15 +85,15 @@ class Organization(BaseObject):
             raise ValueError('Invalid email value type')
 
     def validate(self):
-        if self.country_name is None:
+        if not self.country_name:
             self.__set_validation_error('Organization country_name not specified')
-        if self.state is None:
+        if not self.state:
             self.__set_validation_error('Organization state not specified')
-        if self.org_name is None:
+        if not self.org_name:
             self.__set_validation_error('Organization org_name not specified')
-        if self.common_name is None:
+        if not self.common_name:
             self.__set_validation_error('Organization common_name not specified')
-        if self.email is None:
+        if not self.email:
             self.__set_validation_error('Organization email not specified')
 
     def verify(self):

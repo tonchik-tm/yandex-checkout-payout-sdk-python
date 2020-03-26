@@ -39,8 +39,11 @@ class TestMakeDepositionRequest(unittest.TestCase):
         self.assertIsInstance(request.payment_params, Recipient)
         self.assertIsInstance(request.payment_params.pof_offer_accepted, bool)
 
-        with self.assertRaises(TypeError):
+        with self.assertRaises(ValueError):
             request.request_dt = 'invalid request_dt'
+
+        with self.assertRaises(TypeError):
+            request.request_dt = object()
 
         with self.assertRaises(TypeError):
             request.payment_params = 'invalid payment_params'
@@ -89,6 +92,35 @@ class TestMakeDepositionRequest(unittest.TestCase):
         request.agent_id = 250000
         with self.assertRaises(ValueError):
             request.validate()
+
+    def test_request_map(self):
+        req = MakeDepositionRequest(self.create_make_params())
+        self.assertEqual(req.map(), {
+            'makeDepositionRequest': {
+                "requestDT": req.request_dt.strftime('%Y-%m-%dT%H:%M:%S.%f%z'),
+                "agentId": req.agent_id,
+                "clientOrderId": req.client_order_id,
+                "dstAccount": req.dst_account,
+                "amount": format(req.amount, ".2f"),
+                "currency": req.currency,
+                "contract": req.contract,
+                "paymentParams": {
+                    "pof_offerAccepted": ['1'],
+                    "skr_destinationCardSynonim": [req.payment_params.skr_destination_card_synonym],
+                    "smsPhoneNumber": [req.payment_params.sms_phone_number],
+                    "pdr_firstName": [req.payment_params.pdr_first_name],
+                    "pdr_middleName": [req.payment_params.pdr_middle_name],
+                    "pdr_lastName": [req.payment_params.pdr_last_name],
+                    "pdr_docNumber": [req.payment_params.pdr_doc_number],
+                    "pdr_docIssueDate": [req.payment_params.pdr_doc_issue_date.strftime('%d.%m.%Y')],
+                    "pdr_postcode": [str(req.payment_params.pdr_postcode)],
+                    "pdr_country": [str(req.payment_params.pdr_country)],
+                    "pdr_city": [req.payment_params.pdr_city],
+                    "pdr_address": [req.payment_params.pdr_address],
+                    "pdr_birthDate": [req.payment_params.pdr_birth_date.strftime('%d.%m.%Y')],
+                }
+            }
+        })
 
     @staticmethod
     def create_make_params():

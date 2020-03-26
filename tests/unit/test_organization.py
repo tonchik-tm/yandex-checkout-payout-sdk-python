@@ -18,9 +18,9 @@ class TestOrganization(unittest.TestCase):
         self.assertEqual({
             'country_name': 'RU',
             'state': 'Russia',
-            'locality': '',
+            'locality': '-',
             'org_name': 'Yandex Money',
-            'org_unit_name': '',
+            'org_unit_name': '-',
             'common_name': '/business/yamoney',
             'email': 'cms@yamoney.ru',
         }, dict(org))
@@ -43,13 +43,13 @@ class TestOrganization(unittest.TestCase):
         self.assertEqual(org.state, 'Russia')
 
         self.assertIsInstance(org.locality, str)
-        self.assertEqual(org.locality, '')
+        self.assertEqual(org.locality, '-')
 
         self.assertIsInstance(org.org_name, str)
         self.assertEqual(org.org_name, 'Yandex Money')
 
         self.assertIsInstance(org.org_unit_name, str)
-        self.assertEqual(org.org_unit_name, '')
+        self.assertEqual(org.org_unit_name, '-')
 
         self.assertIsInstance(org.common_name, str)
         self.assertEqual(org.common_name, '/business/yamoney')
@@ -59,6 +59,9 @@ class TestOrganization(unittest.TestCase):
 
         with self.assertRaises(ValueError):
             org.common_name = 'invalid common_name'
+
+        with self.assertRaises(ValueError):
+            org.email = 'cms@yamoneyru'
 
     def test_organization_validate(self):
         org = Organization()
@@ -91,3 +94,8 @@ class TestOrganization(unittest.TestCase):
         org.email = 'cms@yamoney.ru'
         with self.assertRaises(ValueError):
             org.validate()
+
+        self.assertEqual(org.verify(), False)
+
+        org.org_name = 'Yandex Money'
+        self.assertEqual(org.verify(), True)

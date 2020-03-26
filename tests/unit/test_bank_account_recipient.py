@@ -125,7 +125,12 @@ class TestBankAccountRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.sms_phone_number = 'invalid sms_phone_number'
 
-    def test_request_validate(self):
+        with self.assertRaises(ValueError):
+            rec.pdr_address = 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4, ' \
+                              'пос.Большие Васюки, ул.Комиссара Козявкина, д.4, ' \
+                              'пос.Большие Васюки, ул.Комиссара Козявкина, д.4'
+
+    def test_recipient_validate(self):
         rec = BankAccountRecipient()
 
         with self.assertRaises(ValueError):
@@ -179,7 +184,15 @@ class TestBankAccountRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.validate()
 
+        rec.pdr_doc_issue_date = datetime.date(1999, 7, 30)
+        with self.assertRaises(ValueError):
+            rec.validate()
+
         rec.pdr_address = 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4'
+        with self.assertRaises(ValueError):
+            rec.validate()
+
+        rec.pdr_address = 123456
         with self.assertRaises(ValueError):
             rec.validate()
 
@@ -187,7 +200,49 @@ class TestBankAccountRecipient(unittest.TestCase):
         with self.assertRaises(ValueError):
             rec.validate()
 
+        rec.pdr_birth_date = datetime.date(1987, 5, 24)
+        with self.assertRaises(ValueError):
+            rec.validate()
+
         rec = BankAccountRecipient()
         rec.sms_phone_number = '79653457676'
         with self.assertRaises(ValueError):
             rec.validate()
+
+    def test_recipient_map(self):
+        rec = BankAccountRecipient({
+            'pof_offer_accepted': True,
+            'bank_name': 'ПАО Сбербанк',
+            'bank_city': 'г.Москва',
+            'bank_cor_account': '30101810400000000225',
+            'customer_account': '40817810255030943620',
+            'bank_bik': '042809679',
+            'payment_purpose': 'Возврат по договору 25-001, без НДС',
+            'pdr_first_name': 'Владимир',
+            'pdr_middle_name': 'Владимирович',
+            'pdr_last_name': 'Владимиров',
+            'pdr_doc_number': '4002109067',
+            'pdr_doc_issue_date': '1999-07-30',
+            'pdr_address': 'пос.Большие Васюки, ул.Комиссара Козявкина, д.4',
+            'pdr_birth_date': '1987-5-24',
+            'sms_phone_number': '+79653457676',
+        })
+        self.assertEqual(rec.map(), {
+            "pof_offerAccepted": [str(int(rec.pof_offer_accepted))],
+            "BankName": [rec.bank_name],
+            "BankCity": [rec.bank_city],
+            "BankCorAccount": [rec.bank_cor_account],
+            "CustAccount": [rec.customer_account],
+            "BankBIK": [rec.bank_bik],
+            "payment_purpose": [rec.payment_purpose],
+            "pdr_firstName": [rec.pdr_first_name],
+            "pdr_middleName": [rec.pdr_middle_name],
+            "pdr_lastName": [rec.pdr_last_name],
+            "pdr_docNumber": [rec.pdr_doc_number],
+            "pdr_docIssueYear": [rec.pdr_doc_issue_date.strftime('%Y')],
+            "pdr_docIssueMonth": [rec.pdr_doc_issue_date.strftime('%m')],
+            "pdr_docIssueDay": [rec.pdr_doc_issue_date.strftime('%d')],
+            "pdr_address": [rec.pdr_address],
+            "pdr_birthDate": [rec.pdr_birth_date.strftime('%d.%m.%Y')],
+            "smsPhoneNumber": [rec.sms_phone_number],
+        })

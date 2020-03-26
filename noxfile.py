@@ -1,9 +1,9 @@
 import nox  # type: ignore
 from pathlib import Path
 
-nox.options.sessions = ["tests", "lint", "build"]
+nox.options.sessions = ["tests"]  # , "lint", "build"
 
-python = ["3.7"]
+python = ["3.7", "3.8"]
 
 
 lint_dependencies = [
@@ -20,7 +20,7 @@ lint_dependencies = [
 @nox.session(python=python)
 def tests(session):
     session.install("-e", ".", "pytest", "pytest-cov")
-    tests = session.posargs or ["tests"]
+    tests = session.posargs or ["tests/unit"]
     session.run(
         "pytest",
         "--cov=yandex_checkout_payout",

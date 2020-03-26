@@ -31,7 +31,7 @@ class MakeDepositionRequest(DepositionRequest):
             self.set_validation_error('Deposition payment_params not specified')
 
     def map(self):
-        _map = super().map()
+        _map = super(MakeDepositionRequest, self).map()
         if self.payment_params:
             _map.update({
                 "paymentParams": self.payment_params.map()

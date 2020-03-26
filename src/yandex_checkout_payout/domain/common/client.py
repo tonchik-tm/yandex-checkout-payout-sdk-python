@@ -10,8 +10,8 @@ try:
 except ImportError:
     from urllib.parse import urlencode
 
-import urllib3
 import requests
+import urllib3
 from requests.adapters import HTTPAdapter
 from urllib3 import Retry
 from urllib3.util.ssl_ import create_urllib3_context
@@ -28,6 +28,8 @@ from yandex_checkout_payout.domain.exceptions.not_found_error import NotFoundErr
 from yandex_checkout_payout.domain.exceptions.response_processing_error import ResponseProcessingError
 from yandex_checkout_payout.domain.exceptions.too_many_request_error import TooManyRequestsError
 from yandex_checkout_payout.domain.exceptions.unauthorized_error import UnauthorizedError
+from yandex_checkout_payout.domain.request.request_object import RequestObject
+from yandex_checkout_payout.domain.request.synonym_card_request import SynonymCardRequest
 
 
 class ApiClient:
@@ -131,15 +133,15 @@ class ApiClient:
 class SSLAdapter(HTTPAdapter):
     def __init__(self, keychain, *args, **kwargs):
         self._keychain = keychain
-        return super(self.__class__, self).__init__(*args, **kwargs)
+        return super(SSLAdapter, self).__init__(*args, **kwargs)
 
     def init_poolmanager(self, *args, **kwargs):
         self._add_ssl_context(kwargs)
-        return super(self.__class__, self).init_poolmanager(*args, **kwargs)
+        return super(SSLAdapter, self).init_poolmanager(*args, **kwargs)
 
     def proxy_manager_for(self, *args, **kwargs):
         self._add_ssl_context(kwargs)
-        return super(self.__class__, self).proxy_manager_for(*args, **kwargs)
+        return super(SSLAdapter, self).proxy_manager_for(*args, **kwargs)
 
     def _add_ssl_context(self, kwargs):
         context = create_urllib3_context()
