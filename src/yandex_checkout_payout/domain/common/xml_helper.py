@@ -63,7 +63,7 @@ class Object2XML:
         attr_str = ""  # attribute string of this level
         child_str = ""  # XML string of this level's children
 
-        for k, v in dict_obj.items():
+        for k, v in sorted(dict_obj.items(), key=lambda kv: kv[0], reverse=False):
             if isinstance(v, dict):
                 # child tags, with attributes
                 child_str += self._dict_to_xml(v, k)
@@ -78,7 +78,7 @@ class Object2XML:
             return child_str
 
         # create XML string for attributes
-        for k, v in attributes.items():
+        for k, v in sorted(attributes.items(), key=lambda kv: kv[0], reverse=False):
             attr_str += " %s=\"%s\"" % (k, v)
 
         # let's assemble our tag string

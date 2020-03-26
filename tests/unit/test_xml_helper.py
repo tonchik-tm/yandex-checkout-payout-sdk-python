@@ -9,10 +9,7 @@ class TestXMLHelper(unittest.TestCase):
         obj = self.get_obj()
         comp = '<root param1="param1" param2="param2"><params p1="p1" p2="p2" /></root>'
 
-        res = XMLHelper.object_to_xml(None)
-        self.assertEqual(res, "")
-
-        res = XMLHelper.object_to_xml(dict(obj))
+        res = XMLHelper.object_to_xml(obj)
         self.assertEqual(res, comp)
 
         res = XMLHelper.object_to_xml({"xml": ["p1", "p2", None]})
@@ -20,6 +17,9 @@ class TestXMLHelper(unittest.TestCase):
 
         res = XMLHelper.object_to_xml(["p1", "p2", None])
         self.assertEqual(res, 'p1p2')
+
+        res = XMLHelper.object_to_xml(None)
+        self.assertEqual(res, "")
 
     def test_xml_to_object(self):
         obj = self.get_obj()
