@@ -29,6 +29,6 @@ setup(
     packages=find_packages(include=["src/yandex_checkout_payout", "src/yandex_checkout_payout.*"]),
     setup_requires=[],
     url="https://github.com/yandex-money/yandex-checkout-payout-sdk-python",
-    version="0.1.0",
+    version="0.3.0",
     zip_safe=False,
 )
